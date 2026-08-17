@@ -1,0 +1,280 @@
+{
+  "school": {
+    "name": "Kindervale Preschool",
+    "tagline": "Celebrating Childhood",
+    "address": "Plaza 20, Westeria Road, Sector A, DHA-II, Islamabad 44000, Pakistan.",
+    "phone": "+92 301 5176367",
+    "landline": "+92 51 6102860",
+    "email": "info@kindervale.com",
+    "portalUrl": "kindervale-portal.html",
+    "admissionForm": "https://www.kindervale.com/_files/ugd/29bf34_11fdccf2df4a43c7b76d23881174defd.pdf"
+  },
+  "images": {
+    "logo": "https://static.wixstatic.com/media/4a2f22_df454f17ba0a45458692bd22a1e9df28~mv2.png/v1/crop/x_172,y_0,w_1846,h_1752/fill/w_276,h_262,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/Logo%20Birds%20Without%20Background.png",
+    "founder": "https://static.wixstatic.com/media/29bf34_20f05b5b779c4e6d887876b8503aba67~mv2.jpg/v1/crop/x_0,y_837,w_3024,h_2066/fill/w_544,h_550,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/IMG_9526_JPG.jpg",
+    "gallery": [
+      {
+        "title": "Outdoor Play",
+        "category": "Outdoor Play",
+        "src": "https://static.wixstatic.com/media/29bf34_7f3b88bfa72c4ee6a75ad9fc7f0162f2~mv2.jpg/v1/fill/w_980,h_980,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/29bf34_7f3b88bfa72c4ee6a75ad9fc7f0162f2~mv2.jpg"
+      },
+      {
+        "title": "Arts & Crafts",
+        "category": "Art & Creativity",
+        "src": "https://static.wixstatic.com/media/29bf34_86af1a3b937447338208ccf139286693~mv2.jpg/v1/fill/w_980,h_662,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/29bf34_86af1a3b937447338208ccf139286693~mv2.jpg"
+      },
+      {
+        "title": "Community Helper Visits",
+        "category": "Learning Activities",
+        "src": "https://static.wixstatic.com/media/29bf34_8577709c6276483d8325e09eb481f21b~mv2.jpg/v1/fill/w_980,h_1307,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/29bf34_8577709c6276483d8325e09eb481f21b~mv2.jpg"
+      },
+      {
+        "title": "Seasonal Activities",
+        "category": "Events & Celebrations",
+        "src": "https://static.wixstatic.com/media/29bf34_22d2e70b48b946f4b14c8a05a85c9bae~mv2.jpg/v1/fill/w_508,h_564,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/IMG_9226.jpg"
+      },
+      {
+        "title": "Indoor Play",
+        "category": "Daily Life",
+        "src": "https://static.wixstatic.com/media/29bf34_6bbad138254241758a18bdeba33f4b87~mv2.jpg/v1/fill/w_980,h_1115,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/29bf34_6bbad138254241758a18bdeba33f4b87~mv2.jpg"
+      },
+      {
+        "title": "Circle Time",
+        "category": "Classrooms",
+        "src": "https://static.wixstatic.com/media/29bf34_bf82587376344763813916bb36223080~mv2.jpg/v1/fill/w_980,h_1307,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/29bf34_bf82587376344763813916bb36223080~mv2.jpg"
+      },
+      {
+        "title": "Costume Party",
+        "category": "Events & Celebrations",
+        "src": "https://static.wixstatic.com/media/29bf34_1d78cf5fffc247dcb86d32d8ccd648ed~mv2.jpg/v1/fill/w_980,h_1307,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/29bf34_1d78cf5fffc247dcb86d32d8ccd648ed~mv2.jpg"
+      },
+      {
+        "title": "Sports Day",
+        "category": "Outdoor Play",
+        "src": "https://static.wixstatic.com/media/29bf34_785196177cc14707a129087496692c29~mv2.jpg/v1/fill/w_980,h_1307,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/29bf34_785196177cc14707a129087496692c29~mv2.jpg"
+      },
+      {
+        "title": "Annual Play",
+        "category": "Events & Celebrations",
+        "src": "https://static.wixstatic.com/media/29bf34_0991cf451bdb4b758558383aa7631ee7~mv2.jpg/v1/fill/w_980,h_653,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/29bf34_0991cf451bdb4b758558383aa7631ee7~mv2.jpg"
+      },
+      {
+        "title": "Kids' Lunch Time",
+        "category": "Daily Life",
+        "src": "https://static.wixstatic.com/media/29bf34_f36b7c1d80784fd1a59b7f5b4387c6da~mv2.jpg/v1/fill/w_243,h_243,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/IMG_0572_edited.jpg"
+      },
+      {
+        "title": "Student Studying",
+        "category": "Learning Activities",
+        "src": "https://static.wixstatic.com/media/29bf34_c7f73d223a524f55bc49b94c61262f3f~mv2.jpg/v1/fill/w_234,h_241,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/IMG_7246_edited.jpg"
+      },
+      {
+        "title": "Fine Motor Skills via Play Time",
+        "category": "Learning Activities",
+        "src": "https://static.wixstatic.com/media/29bf34_22d2e70b48b946f4b14c8a05a85c9bae~mv2.jpg/v1/fill/w_254,h_282,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/IMG_9226.jpg"
+      },
+      {
+        "title": "Reading Time",
+        "category": "Classrooms",
+        "src": "https://static.wixstatic.com/media/29bf34_2faa9f76aef64d79b68484a524385eb1~mv2.jpg/v1/fill/w_254,h_274,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/2f247370-3cf8-4dab-82ad-8485a488173d_JPG.jpg"
+      },
+      {
+        "title": "Activity Time",
+        "category": "Learning Activities",
+        "src": "https://static.wixstatic.com/media/29bf34_36e4558a95fc4f61bf5c73c0f5d32136~mv2.jpg/v1/fill/w_254,h_282,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/67378AC1-1ED0-489C-B3A5-22E72C9D52BC_JPG.jpg"
+      },
+      {
+        "title": "Painting Session",
+        "category": "Art & Creativity",
+        "src": "https://static.wixstatic.com/media/29bf34_e3b2b2995b5b4cc3a7dfc08f1f0b7e87~mv2.jpg/v1/fill/w_251,h_292,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/IMG_6029.jpg"
+      },
+      {
+        "title": "Off Time",
+        "category": "Daily Life",
+        "src": "https://static.wixstatic.com/media/29bf34_fd589a0d7203444f96b20792d564d412~mv2.jpg/v1/fill/w_254,h_292,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/5d284080-37a7-4dc9-970e-76ad90bf7f82%20%281%29.jpg"
+      }
+    ]
+  },
+  "about": [
+    "Kindervale is a learning establishment for preschoolers, founded by Ms. Tazeen Raza, an educationist since the past 25 years. She has done her Masters in Educational Leadership and Management and Teacher Certification course from UK. She began her career at the age of 22 as a preschool teacher and later progressed to Headmistress and Principal in Beaconhouse and Lahore Grammar School.",
+    "Established in 2021, Kindervale Preschool is more than just a school. It is a celebration of childhood. Kindervale prides itself over its love for children, their curiosity and creativity. A space that not only prioritises academic achievement, but also aims to cultivate well-groomed, compassionate and confident members of the community."
+  ],
+  "founder": {
+    "name": "Mrs. Tazeen Raza",
+    "title": "Founder and Director",
+    "message": [
+      "Dear Parents, Greetings! It is with great pride that I welcome you to Kindervale Preschool - your child's home away from home.",
+      "I started Kindervale in June 2021 - Covid had run its course and the children needed to step out of the house, play and interact with each other. Parents were eager to get their children to socialize and communicate in a safe environment and as an educationist, I felt the need to provide a solution. So I took a plunge with a highly optimistic mind and an intuitive feeling that everything will turn out positive, in near future.",
+      "I knew I had to meet the social and emotional developmental needs of the children at that time so I designed a curriculum that catered to the children's language acquisition, speech progress and social interaction. With a focus on children's physical, personal, social and emotional development, I knew I had to achieve learning with the help of a vibrant environment, stimulating resources and a staff that could help children develop positive relationships through gentleness and love.",
+      "I wanted a place where children learn through play and develop new skills every day. By incorporating the Early Years Foundation Stage curriculum, I was able to generate a wonderful five year plan for a child's early years learning.",
+      "And so with this vision, Kindervale came into being on beautiful and sunny Westeria Road in DHA-2 Islamabad - a convenient location for nearby residents - in a bright and airy building suitable for the safety of little children and equipped with elevators and air conditioning. Fortunately, the building came with an outdoor space for the children to frolic and play, catering to all needs.",
+      "I am very happy to say that the outcome has been more positive than I could have hoped for. Due to the collaborative spirit of parents, teachers and the support staff towards my mission, we grow closer to our shared vision of turning these wonderful little darlings into mindful, confident and independent individuals.",
+      "At Kindervale, we aim to help children achieve all their early learning goals so they are not only able to settle into primary schools in the future but are able to emerge as leaders and team players. By encouraging children to learn and develop at their own pace, Kindervale Preschool provides a warm and nurturing environment to help children settle in and thrive as easily and quickly as possible.",
+      "I look forward to meeting you at Kindervale and am eager to welcome your child with open arms. Let's work together to create the very best early years learning experience for your child. In short, let's celebrate childhood!"
+    ],
+    "career": [
+      "With over 25 years of experience, Mrs. Raza specializes in curriculum development, teacher training, school assessments, and progressive teaching methodologies, staying updated with the latest in child education.",
+      "She did her Masters in Educational Leadership and Management from Beaconhouse National University in 2009. Moreover in 1999, her high ambitions led to her to pursuing a teacher training course in Professional Studies in Education from Bradford College, UK.",
+      "Mrs. Tazeen Raza began her teaching career as a preschool teacher at the age of twenty-two. In 1997 she joined Beaconhouse School System and taught English language and literature to Elementary and Middle School students. She was promoted to Senior Mistress in 2000, a leadership role she held till June 2008. In August 2008, after earning a Gold Medal in Masters, she became an O/A-Levels Principal at Lahore Grammar School, serving the institution for seven years.",
+      "In 2015, she founded Learning Curve, a school and daycare offering preschool education and on-site daycare services to organizations like Telenor Pakistan and Global Shared Services in multiple cities. Unfortunately, the school and outsourced daycare services had to close in 2020 due to the COVID-19 pandemic. However, the in-house daycare services for Telenor in Islamabad and Lahore resumed in 2021, with the inception of Kindervale Preschool. Kindervale is currently providing in-house daycare services to Telenor Pakistan, Global Shared Services, Ufone and Pakistan Telecommunication Company Limited (PTCL).",
+      "In June 2021, Mrs. Raza established Kindervale, a preschool in DHA 2, Islamabad, which has earned a strong reputation over the past three years. Catering to children aged 3 to 8 (Pre-Nursery to Grade 2), Kindervale focuses on holistic development - cognitive, social, emotional, and physical. Mrs. Raza and her team design and implement a hands-on curriculum, emphasizing fun activities, child assessments, and continuous teacher training in classroom management and modern teaching methods."
+    ]
+  },
+  "mission": "To create an enabling environment that aims to recognize, inspire and fulfill the needs that children have in their formative years. To fulfill children's innate curiosity, be attentive to their urge to learn and encourage them to express and discover themselves in a safe haven they can call their own.",
+  "vision": "A space that encourages not only academic achievement of the children but also helps develop them into compassionate, well-groomed, and confident members of the community.",
+  "values": [
+    "Enabling supportive environments.",
+    "Positive relationships between the caretakers, parents and children.",
+    "Build confidence in children.",
+    "Professional and sensitive teachers that are vigilant and observant to the children's capabilities and talents.",
+    "A strong eye for the child's strengths and areas for improvement, while applying the same energy and motivation to build their strengths.",
+    "Honesty in providing child's feedback to parents.",
+    "A holistic approach to children's education.",
+    "Collaboration between the parents and the caregivers keeping in mind the child's positive growth at Kindervale."
+  ],
+  "curriculum": {
+    "summary": "Early Years Foundation Stage (EYFS) is a British Curriculum that sets the standards at Kindervale. By adhering to EYFS, Kindervale believes each child is unique and must be provided with an enabling environment and positive relationships that lead to optimum learning and development.",
+    "areas": [
+      "Personal, Social and Emotional Development",
+      "Physical Development",
+      "Communication and Language",
+      "Literacy",
+      "Numeracy",
+      "Expressive Art and Design",
+      "Understanding of the World"
+    ]
+  },
+  "levels": [
+    {
+      "slug": "school-readiness",
+      "name": "School Readiness",
+      "age": "2-3Y",
+      "timings": "9:30 am to 12:30 pm",
+      "image": "https://static.wixstatic.com/media/29bf34_22d2e70b48b946f4b14c8a05a85c9bae~mv2.jpg/v1/fill/w_254,h_282,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/IMG_9226.jpg",
+      "imageAlt": "Fine Motor Skills via Play Time",
+      "overview": "A semi-structured programme targeted towards two to three years old who need orientation towards learning and positive growth. Focuses on Sensorial, Fine and Gross motor skills while simultaneously provides them with ample opportunities to interact socially and express themselves through artwork and pretend play.",
+      "curriculum": "Focuses on sensoral, fine and gross motor skills while providing ample opportunities to interact socially and express themselves through artwork and pretend play.",
+      "objectives": ["Your child gets to take  a small step towards learning.", "They learn about what school is like.", "They develop positive relationships with other children and adults.", "They gain confidence.","They make lots of artwork!","They get to play, sing and dance!"],
+      "activities": ["Artwork", "Play", "Singing", "Dancing"]
+    },
+    {
+      "slug": "pre-nursery",
+      "name": "Pre-Nursery",
+      "age": "3Y",
+      "timings": "9:30 am to 12:30 pm",
+      "image": "https://static.wixstatic.com/media/29bf34_2faa9f76aef64d79b68484a524385eb1~mv2.jpg/v1/fill/w_254,h_274,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/2f247370-3cf8-4dab-82ad-8485a488173d_JPG.jpg",
+      "imageAlt": "Reading Time",
+      "overview": "A fun, activity based programme that focuses on language acquisition, basic recognition of literary and general knowledge, basic fine and gross motor skills, with lots of arts and crafts and dancing.",
+      "curriculum": "Language acquisition, basic recognition, literary and general knowledge, and fine and gross motor skills.",
+      "objectives": ["Build language acquisition", "Develop basic recognition", "Strengthen fine and gross motor skills"],
+      "activities": ["Arts and crafts", "Dancing", "Activity-based learning"]
+    },
+    {
+      "slug": "nursery",
+      "name": "Nursery",
+      "age": "4Y",
+      "timings": "9:30 am to 1:00 pm",
+      "image": "https://static.wixstatic.com/media/29bf34_36e4558a95fc4f61bf5c73c0f5d32136~mv2.jpg/v1/fill/w_254,h_282,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/67378AC1-1ED0-489C-B3A5-22E72C9D52BC_JPG.jpg",
+      "imageAlt": "Activity Time",
+      "overview": "A structured programme that focuses on language acquisition, basic reading and writing skills, complete recognition of the alphabet and numerical digits along with refined general knowledge and gross motor skills.",
+      "curriculum": "Language acquisition, basic reading and writing, alphabet and numerical digit recognition, general knowledge and gross motor skills.",
+      "objectives": ["Develop reading and writing skills", "Recognise the alphabet and numerical digits", "Refine general knowledge"],
+      "activities": ["Structured learning", "Reading and writing practice", "Gross motor activities"]
+    },
+    {
+      "slug": "kg",
+      "name": "KG",
+      "age": "5Y",
+      "timings": "9:00 am to 1:00 pm",
+      "image": "https://static.wixstatic.com/media/29bf34_e3b2b2995b5b4cc3a7dfc08f1f0b7e87~mv2.jpg/v1/fill/w_251,h_292,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/IMG_6029.jpg",
+      "imageAlt": "Painting Session",
+      "overview": "A structured programme that focuses on fluency of language(s), advanced reading and writing skills, general knowledge retention, with an introduction to more complex scientific, mathematic and literary concepts.",
+      "curriculum": "Fluency of language(s), advanced reading and writing, general knowledge retention, and scientific, mathematic and literary concepts.",
+      "objectives": ["Build fluency of language(s)", "Advance reading and writing", "Explore scientific, mathematic and literary concepts"],
+      "activities": ["Advanced literacy", "Concept exploration", "Structured learning"]
+    },
+    {
+      "slug": "grade-1-2",
+      "name": "Grade 1 & 2",
+      "age": "6-7Y",
+      "timings": "8:00 am to 1:30 pm",
+      "image": "https://static.wixstatic.com/media/29bf34_fd589a0d7203444f96b20792d564d412~mv2.jpg/v1/fill/w_254,h_292,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/5d284080-37a7-4dc9-970e-76ad90bf7f82%20%281%29.jpg",
+      "imageAlt": "Off Time",
+      "overview": "A standard grade structure, with focus on all areas of academic learning including Islamyat, Computers and Social Studies, along with an introduction to more complex concepts regarding visual and performance arts.",
+      "curriculum": "All areas of academic learning including Islamyat, Computers and Social Studies, plus visual and performance arts.",
+      "objectives": ["Build academic foundations", "Learn Islamyat, Computers and Social Studies", "Explore visual and performance arts"],
+      "activities": ["Academic learning", "Computer learning", "Visual and performance arts"]
+    }
+  ],
+  "facilities": [
+    "Fully air-conditioned classrooms",
+    "Support staff trained in changing diapers and helping with lunch",
+    "Bathrooms on every floor",
+    "Childproof, safe and secure environment",
+    "A fully stocked library",
+    "Elevator",
+    "Lots of fun and educational toys",
+    "An outdoor play area",
+    "CCTV",
+    "Sports equipment"
+  ],
+  "team": [
+    {"role": "CEO/Principal", "name": "Tazeen Raza", "photo": ""},
+    {"role": "Admin/HR Head", "name": "Asadullah Khan", "photo": ""},
+    {"role": "Academic Co-ordinator", "name": "Aaez Raza", "photo": ""},
+    {"role": "Accounts Manager", "name": "Saqib Naseer", "photo": ""},
+    {"role": "Operations Head", "name": "Sanam Ehsan", "photo": ""},
+    {"role": "Admissions Officer & Asst. Head", "name": "Uzma Irshad", "photo": ""},
+    {"role": "Head Teacher", "name": "Iqra Naseer", "photo": ""},
+    {"role": "Asst. Accounts Manager", "name": "Nabeel Durrani", "photo": ""},
+    {"role": "Supervisor", "name": "Chishman Tariq", "photo": ""},
+    {"role": "Cashier", "name": "Muhammad Zeeshan", "photo": ""},
+    {"role": "School Teachers", "name": "Maha Asghar Khan, Tabassum Fatima, Asma Masood, Seerat Ul Arooj, Anis Fatima, Shiza James, Nimra Shehzadi", "photo": ""},
+    {"role": "Daycare Teachers", "name": "Hina Rasheed, Sehar Qamar", "photo": ""},
+    {"role": "Asst. Teachers", "name": "Sadaf Akhtar, Shabana Tariq, Shumaila Rani", "photo": ""},
+    {"role": "Sports Teacher", "name": "Rashid Jamil", "photo": ""},
+    {"role": "Computer Operator", "name": "Ahsan", "photo": ""},
+    {"role": "Driver", "name": "Mubashir", "photo": ""},
+    {"role": "Office Boy", "name": "Asad Zaman", "photo": ""},
+    {"role": "Security Guard", "name": "Muhammad Mushtaq", "photo": ""},
+    {"role": "Nannies", "name": "Zobina Kanwal, Saima Qamar", "photo": ""}
+  ],
+  "admissions": {
+    "officeHours": ["Monday - Thursday: 8:00 am to 2:00 pm", "Friday: 8:00 am to 1:00 pm"],
+    "tour": "Call us on 0301-5176367 to book a tour."
+  },
+  "fees": {
+    "year": "Academic Year 2026-2027",
+    "items": [
+      ["Admission Fee", "Rs. 40,000/-"],
+      ["Security Deposit", "Rs. 24,000/-"],
+      ["Annual Charges", "Rs. 24,000/-"],
+      ["Monthly Tuition", "Rs. 24,000/-"]
+    ],
+    "notes": [
+      "This fee structure applies to Pre-Nursery, Nursery, and KG Classes at Kindervale.",
+      "The security deposit, annual charges and monthly tuition for Grade 1 and 2 are Rs. 25,000/- each.",
+      "The monthly tuition should be deposited before the 10th of each month; PKR 1000 will be charged on late fee deposit."
+    ]
+  },
+  "consultancy": {
+    "summary": "Kindervale, as a consultant, provides a comprehensive range of services tailored to enhance early childhood education and development. Our expertise extends from assessing children's capabilities and advising parents, to organizing engaging events and educational outings, ensuring a well-rounded approach to fostering growth in young learners.",
+    "services": [
+      ["Child Capability Assessment", "Comprehensive assessments of children's cognitive, emotional, and social development to identify strengths, areas for improvement, and overall progress."],
+      ["Parental Advisory for Child Brainstorming", "Guidance for parents on creative brainstorming activities, interactive discussions, and problem-solving exercises at home."],
+      ["Engaging Developmental Events", "Sports, drama, arts and group activities that develop physical, social and creative abilities, collaboration, creativity and confidence."],
+      ["Educational Outings and Field Trips", "Museum visits and culturally enriching locations that support curiosity, interactive learning and hands-on exploration."]
+    ]
+  },
+  "events": [
+    "Outdoor Play",
+    "Arts & Crafts",
+    "Community Helper Visits",
+    "Seasonal Activities",
+    "Indoor Play",
+    "Circle Time",
+    "Costume Party",
+    "Sports Day",
+    "Annual Play"
+  ]
+}

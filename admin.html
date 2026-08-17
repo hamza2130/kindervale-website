@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kindervale Admin</title>
+  <style>
+    :root{--sky1:#2e5a75;--cream:#fbfcfd;--coral:#f6b41e;--coral-dark:#e0a00c;--teal:#2e5a75;--teal-dark:#1f4257;--yellow:#f6b41e;--navy:#2e5a75;--ink:#3f4657;--muted:#8b93a7;--line:#e6edf2;--shadow:0 12px 34px rgba(51,65,92,.10);--radius:20px}
+    *{box-sizing:border-box;margin:0;padding:0}body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;color:var(--ink);line-height:1.55;background:var(--cream)}header{background:var(--navy);color:#fff;padding:22px}.wrap{max-width:1150px;margin:0 auto;padding:24px 18px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.panel{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px;margin-bottom:20px}h1,h2,h3{color:var(--navy)}header h1{color:#fff}.btn{display:inline-flex;align-items:center;justify-content:center;border:none;border-radius:999px;padding:10px 18px;font-weight:800;cursor:pointer;background:var(--coral);color:#1f4257}.btn:hover{background:var(--coral-dark)}input,select,textarea{width:100%;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font:inherit;margin:6px 0 12px}label{font-weight:800;color:var(--navy);font-size:13px}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.list{display:grid;gap:10px;margin-top:12px}.item{border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff}.thumb{width:64px;height:64px;border-radius:50%;object-fit:cover;border:3px solid #fff;box-shadow:var(--shadow)}.muted{color:var(--muted);font-size:13px}.hide{display:none}@media(max-width:880px){.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <header><div class="wrap"><h1>Kindervale Admin</h1><p>Gallery and admissions management</p></div></header>
+  <main class="wrap">
+    <section class="panel" id="login-panel">
+      <h2>Admin Login</h2>
+      <label>Email<input id="email" type="email"></label>
+      <label>Password<input id="password" type="password"></label>
+      <button class="btn" id="login">Login</button>
+      <p class="muted" id="login-message"></p>
+    </section>
+
+    <section id="admin-app" class="hide">
+      <div class="grid">
+        <article class="panel">
+          <h2>Gallery Categories</h2>
+          <label>Category name<input id="category-name"></label>
+          <label>Description<textarea id="category-description"></textarea></label>
+          <button class="btn" id="create-category">Create Category</button>
+          <div class="list" id="categories"></div>
+        </article>
+
+        <article class="panel">
+          <h2>Add Gallery Image</h2>
+          <label>Title<input id="image-title"></label>
+          <label>Category<select id="image-category"></select></label>
+          <label>Image URL<input id="image-url" placeholder="Cloudinary/S3 URL or upload via API"></label>
+          <label>Description<textarea id="image-description"></textarea></label>
+          <label><input id="image-featured" type="checkbox" style="width:auto"> Featured cover image</label>
+          <div class="row" style="margin-top:10px">
+            <input id="image-file" type="file" accept="image/*" style="max-width:420px">
+          </div>
+          <button class="btn" id="create-image">Add Image</button>
+          <p class="muted" id="upload-progress" style="margin-top:10px;min-height:18px"></p>
+          <div class="list" id="images"></div>
+        </article>
+      </div>
+
+      <article class="panel">
+        <div class="row">
+          <h2>Admissions</h2>
+          <input id="admission-search" placeholder="Search applicants" style="max-width:280px">
+          <select id="admission-status" style="max-width:180px">
+            <option value="">All statuses</option>
+            <option>Pending</option>
+            <option>Reviewed</option>
+            <option>Accepted</option>
+            <option>Rejected</option>
+          </select>
+          <a class="btn" id="export-csv" href="/api/admissions/export.csv">Export CSV</a>
+        </div>
+        <div class="list" id="admissions"></div>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    let token = localStorage.getItem('kindervale:admin-token') || '';
+    const $ = selector => document.querySelector(selector);
+    const headers = () => ({'Content-Type':'application/json', Authorization:`Bearer ${token}`});
+    const api = (url, options = {}) => fetch(url, {...options, headers: {...headers(), ...(options.headers || {})}});
+
+    function uiError(message) {
+      // Generic alert area (reuse login-message if needed)
+      $('#login-message') && ($('#login-message').textContent = message);
+    }
+
+    async function uploadImageWithProgress({url, formData, onProgress, onStart, onDone}) {
+      return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', url, true);
+        xhr.withCredentials = true;
+        const authHeaders = headers();
+        if (authHeaders.Authorization) xhr.setRequestHeader('Authorization', authHeaders.Authorization);
+
+        xhr.upload.addEventListener('progress', event => {
+          if (event.lengthComputable && typeof onProgress === 'function') {
+            onProgress(event.loaded / event.total);
+          }
+        });
+
+        xhr.addEventListener('loadstart', () => { if (typeof onStart === 'function') onStart(); });
+        xhr.addEventListener('load', () => {
+          let json;
+          try { json = xhr.responseText ? JSON.parse(xhr.responseText) : null; } catch (e) {}
+          if (xhr.status >= 200 && xhr.status < 300) {
+            if (typeof onDone === 'function') onDone();
+            resolve({status: xhr.status, json});
+          } else {
+            const errMsg = json?.error || `Upload failed (HTTP ${xhr.status}).`;
+            reject(new Error(errMsg));
+          }
+        });
+        xhr.addEventListener('error', () => reject(new Error('Network error while uploading. Please try again.')));
+
+        xhr.addEventListener('timeout', () => reject(new Error('Upload timed out. Please try again.')));
+        xhr.timeout = 120000;
+        xhr.send(formData);
+      });
+    }
+
+    async function login() {
+      const response = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({email: $('#email').value, password: $('#password').value})
+      });
+      if (!response.ok) {
+        let data = null;
+        try { data = await response.json(); } catch (e) {}
+        const msg = data?.error || data?.message || 'Login failed.';
+        $('#login-message').textContent = msg;
+        return;
+      }
+      const data = await response.json();
+      token = data.token;
+      localStorage.setItem('kindervale:admin-token', token);
+      boot();
+    }
+
+    async function loadGallery() {
+      const data = await (await fetch('/api/gallery')).json();
+      $('#categories').innerHTML = data.categories.map(category => `<div class="item"><strong>${category.name}</strong><p class="muted">${category.description || ''}</p></div>`).join('');
+      $('#image-category').innerHTML = data.categories.map(category => `<option value="${category.id}">${category.name}</option>`).join('');
+      $('#images').innerHTML = data.images.map(image => `<div class="item row"><img class="thumb" src="${image.thumbnailUrl || image.imageUrl}" alt=""><div><strong>${image.title}</strong><p class="muted">${image.category.name} ${image.featured ? 'Featured' : ''}</p></div><button class="btn" data-delete-image="${image.id}">Delete</button></div>`).join('');
+    }
+
+    async function loadAdmissions() {
+      const params = new URLSearchParams({
+        search: $('#admission-search').value,
+        status: $('#admission-status').value
+      });
+      const data = await (await api(`/api/admissions?${params}`)).json();
+      $('#admissions').innerHTML = data.admissions.map(item => `<div class="item"><div class="row"><strong>${item.studentName}</strong><select data-status="${item.id}"><option ${item.status === 'Pending' ? 'selected' : ''}>Pending</option><option ${item.status === 'Reviewed' ? 'selected' : ''}>Reviewed</option><option ${item.status === 'Accepted' ? 'selected' : ''}>Accepted</option><option ${item.status === 'Rejected' ? 'selected' : ''}>Rejected</option></select><button class="btn" data-delete-admission="${item.id}">Delete</button></div><p class="muted">${item.primaryPhone || ''} ${item.primaryEmail || ''}</p><p class="muted">${item.admissionSource || 'General Admissions'}</p><details><summary>Application details</summary><pre>${JSON.stringify(item.formData, null, 2)}</pre></details><label>Internal notes<textarea data-notes="${item.id}">${item.notes || ''}</textarea></label><button class="btn" data-save-admission="${item.id}">Save</button></div>`).join('');
+    }
+
+    async function boot() {
+      $('#login-panel').classList.add('hide');
+      $('#admin-app').classList.remove('hide');
+      await loadGallery();
+      await loadAdmissions();
+    }
+
+    $('#login').addEventListener('click', login);
+    $('#create-category').addEventListener('click', async () => {
+      await api('/api/gallery/categories', {method:'POST', body: JSON.stringify({name: $('#category-name').value, description: $('#category-description').value})});
+      $('#category-name').value = '';
+      $('#category-description').value = '';
+      loadGallery();
+    });
+    $('#create-image').addEventListener('click', async () => {
+      const btn = $('#create-image');
+      const progressEl = $('#upload-progress');
+      const fileInput = $('#image-file');
+
+      const title = $('#image-title').value;
+      const categoryId = $('#image-category').value;
+      const imageUrl = $('#image-url').value;
+      const description = $('#image-description').value;
+      const featured = $('#image-featured').checked;
+
+      if (!title || !categoryId) {
+        uiError('Please provide image title and category.');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.style.opacity = '0.7';
+      progressEl.textContent = '';
+
+      try {
+        if (fileInput?.files?.length) {
+          const file = fileInput.files[0];
+          const formData = new FormData();
+          formData.append('title', title);
+          formData.append('categoryId', categoryId);
+          formData.append('description', description);
+          formData.append('featured', featured ? 'true' : 'false');
+          formData.append('image', file);
+
+          progressEl.textContent = 'Uploading… 0%';
+
+          await uploadImageWithProgress({
+            url: '/api/gallery/images',
+            formData,
+            onStart: () => { progressEl.textContent = 'Uploading… 0%'; },
+            onProgress: p => { progressEl.textContent = `Uploading… ${Math.round(p * 100)}%`; },
+            onDone: () => { progressEl.textContent = 'Upload complete.'; }
+          });
+        } else {
+          // Backward compatible: imageUrl-based creation
+          await api('/api/gallery/images', {method:'POST', body: JSON.stringify({title, categoryId, imageUrl, description, featured})});
+          progressEl.textContent = 'Added.';
+        }
+
+        // Refresh gallery after success
+        await loadGallery();
+
+        // Clear form
+        $('#image-title').value = '';
+        $('#image-url').value = '';
+        $('#image-description').value = '';
+        $('#image-featured').checked = false;
+        if (fileInput) fileInput.value = '';
+      } catch (e) {
+        uiError(e?.message || 'Upload failed. Please try again.');
+      } finally {
+        btn.disabled = false;
+        btn.style.opacity = '';
+      }
+    });
+    $('#admin-app').addEventListener('click', async event => {
+      const imageId = event.target.dataset.deleteImage;
+      const admissionId = event.target.dataset.deleteAdmission;
+      const saveId = event.target.dataset.saveAdmission;
+      if (imageId) await api(`/api/gallery/images/${imageId}`, {method:'DELETE'}).then(loadGallery);
+      if (admissionId) await api(`/api/admissions/${admissionId}`, {method:'DELETE'}).then(loadAdmissions);
+      if (saveId) {
+        await api(`/api/admissions/${saveId}`, {method:'PATCH', body: JSON.stringify({status: document.querySelector(`[data-status="${saveId}"]`).value, notes: document.querySelector(`[data-notes="${saveId}"]`).value})});
+        loadAdmissions();
+      }
+    });
+    $('#admission-search').addEventListener('input', () => loadAdmissions());
+    $('#admission-status').addEventListener('change', () => loadAdmissions());
+    $('#export-csv').addEventListener('click', event => {
+      event.preventDefault();
+      window.location.href = `/api/admissions/export.csv?token=${encodeURIComponent(token)}`;
+    });
+    if (token) boot().catch(() => localStorage.removeItem('kindervale:admin-token'));
+  </script>
+</body>
+</html>

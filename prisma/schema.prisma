@@ -1,0 +1,90 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum AdmissionStatus {
+  Pending
+  Reviewed
+  Accepted
+  Rejected
+}
+
+enum UserRole {
+  Admin
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  role         UserRole @default(Admin)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+}
+
+model GalleryCategory {
+  id          String         @id @default(cuid())
+  name        String         @unique
+  description String?
+  sortOrder   Int            @default(0) @map("sort_order")
+  coverImageId String?       @map("cover_image_id")
+  images      GalleryImage[]
+  createdAt   DateTime       @default(now()) @map("created_at")
+  updatedAt   DateTime       @updatedAt @map("updated_at")
+}
+
+model GalleryImage {
+  id           String          @id @default(cuid())
+  title        String
+  description  String?
+  imageUrl     String          @map("image_url")
+  thumbnailUrl String?         @map("thumbnail_url")
+  uploadDate   DateTime        @default(now()) @map("upload_date")
+  sortOrder    Int             @default(0) @map("sort_order")
+  featured     Boolean         @default(false)
+  categoryId   String          @map("category_id")
+  category     GalleryCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt    DateTime        @default(now()) @map("created_at")
+  updatedAt    DateTime        @updatedAt @map("updated_at")
+
+  @@index([categoryId, sortOrder])
+  @@index([featured])
+}
+
+model Admission {
+  id              String          @id @default(cuid())
+  studentName     String          @map("student_name")
+  gender          String?
+  classApplyingFor String?        @map("class_applying_for")
+  admissionSource String?         @map("admission_source")
+  dateOfBirth     DateTime?       @map("date_of_birth")
+  admittedIn      String?         @map("admitted_in")
+  fatherName      String?         @map("father_name")
+  motherName      String?         @map("mother_name")
+  address         String?
+  city            String?
+  primaryPhone    String?         @map("primary_phone")
+  primaryEmail    String?         @map("primary_email")
+  guardianPhone   String?         @map("guardian_phone")
+  emergencyName   String?         @map("emergency_name")
+  emergencyPhone  String?         @map("emergency_phone")
+  medicalInfo     String?         @map("medical_info")
+  previousSchool  String?         @map("previous_school")
+  documents       Json?
+  formData        Json            @map("form_data")
+  pdfPath         String?         @map("pdf_path")
+  status          AdmissionStatus @default(Pending)
+  notes           String?
+  submissionDate  DateTime        @default(now()) @map("submission_date")
+  createdAt       DateTime        @default(now()) @map("created_at")
+  updatedAt       DateTime        @updatedAt @map("updated_at")
+
+  @@index([status])
+  @@index([studentName])
+  @@index([submissionDate])
+}
