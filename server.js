@@ -50,6 +50,10 @@ app.use(helmet({
 app.use(cors({origin: true, credentials: true}));
 app.use(express.json({limit: '1mb'}));
 app.use(express.urlencoded({extended: true}));
+// Portal is under development — intercept before static middleware serves the old file
+app.get(['/kindervale-portal.html', '/portal', '/portal/', '/portal/login'], (req, res) => {
+  res.send(`<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Kindervale – Portal Coming Soon</title><meta http-equiv="refresh" content="5;url=/"><style>*{margin:0;padding:0;box-sizing:border-box}body{min-height:100vh;display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:linear-gradient(135deg,#e8f4f8 0%,#d1ecf1 50%,#f0f7f4 100%);color:#2e5a75;text-align:center;padding:24px}.card{background:#fff;border-radius:20px;padding:48px 40px;max-width:480px;box-shadow:0 8px 32px rgba(46,90,117,.12)}.icon{font-size:56px;margin-bottom:16px}h1{font-size:1.6rem;margin-bottom:12px;color:#2e5a75}p{font-size:1.05rem;line-height:1.6;color:#5a8a9f;margin-bottom:8px}.redirect{font-size:.9rem;color:#8bb5c4;margin-top:20px}a{color:#2e5a75;text-decoration:underline;font-weight:600}</style></head><body><div class="card"><div class="icon">🏫</div><h1>Parent Portal Coming Soon!</h1><p>We're building something special for Kindervale families. The Parent Portal will be available shortly.</p><p class="redirect">Redirecting to the main website in <span id="c">5</span> seconds…<br>or <a href="/">go back now</a></p></div><script>let s=5;const el=document.getElementById('c');setInterval(()=>{if(--s>=0)el.textContent=s},1e3)</script></body></html>`);
+});
 app.use(express.static(__dirname));
 
 app.get(['/', '/levels/:slug'], (req, res) => {
@@ -511,9 +515,7 @@ app.get('/api/admissions/export.csv', auth, async (req, res, next) => {
   }
 });
 
-app.get(['/portal', '/portal/', '/portal/login'], (req, res) => {
-  res.sendFile(path.join(__dirname, 'kindervale-portal.html'));
-});
+// Portal route is now handled before express.static (see above)
 
 app.use((error, req, res, next) => {
   // Log full error server-side for debugging
@@ -531,8 +533,8 @@ app.use((error, req, res, next) => {
 });
 
 ensureAdminUser()
-     .catch(error => console.error('[startup] ensureAdminUser failed (non-fatal):', error?.message))
-     .then(() => app.listen(PORT, () => console.log(`Kindervale server running on http://localhost:${PORT}`)))
+  .catch(error => console.error('[startup] ensureAdminUser failed (non-fatal):', error?.message))
+  .then(() => app.listen(PORT, () => console.log(`Kindervale server running on http://localhost:${PORT}`)))
   .catch(error => {
     console.error(error);
     process.exit(1);
