@@ -357,13 +357,22 @@ export async function processAdmissionSubmission({ prisma, body, photo, projectR
     }
   });
 
-  const generated = await generateAdmissionPDF(data, { projectRoot });
-  await prisma.admission.update({
-    where: { id: created.id },
-    data: { pdfPath: generated.filePath }
-  });
+       // PDF generation and email are best-effort — the admission record is already saved.
+     try {
+       const generated = await generateAdmissionPDF(data, { projectRoot });
+       await prisma.admission.update({
+         where: { id: created.id },
+         data: { pdfPath: generated.filePath }
+       });
+     } catch (pdfError) {
+       console.error('[admission] PDF generation failed (non-fatal):', pdfError?.message);
+     }
 
-  await sendAdmissionEmail(data);
+     try {
+       await sendAdmissionEmail(data);
+     } catch (emailError) {
+       console.error('[admission] Email delivery failed (non-fatal):', emailError?.message);
+     }
 
-  return created;
+     return created;
 }
