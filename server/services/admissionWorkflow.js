@@ -88,24 +88,6 @@ export async function saveAdmissionPhoto(file, options = {}) {
   };
 }
 
-function drawField(page, font, label, value, x, y, options = {}) {
-  const { labelWidth = 110, valueWidth = 220, size = 10 } = options;
-  page.drawText(label, { x, y, size, font, color: rgb(0.15, 0.15, 0.15) });
-  page.drawLine({
-    start: { x: x + labelWidth, y: y + 2 },
-    end: { x: x + labelWidth + valueWidth, y: y + 2 },
-    thickness: 0.4,
-    color: rgb(0.55, 0.55, 0.55)
-  });
-  page.drawText(safeText(value, ' '), {
-    x: x + labelWidth + 4,
-    y: y + 1,
-    size,
-    font,
-    color: rgb(0.05, 0.05, 0.05)
-  });
-}
-
 export function validateAdmissionPayload(body) {
   const payload = {
     studentName: body.studentName || body['student-name'] || '',
@@ -159,6 +141,76 @@ export function validateAdmissionPayload(body) {
   return { ...payload, dateOfBirth: date };
 }
 
+// ---------------------------------------------------------------------------
+// PDF field coordinates
+//
+// The Kindervale admission-form.pdf template is a *scanned/rasterized* form
+// (each page is a single embedded image, there is no real text/AcroForm
+// layer), so text has to be overlaid at exact pixel positions rather than
+// filled into form fields. These coordinates were measured directly against
+// the template: the template was rendered at 300dpi and OCR'd / pixel-scanned
+// to find the precise x/y position of every label and its adjacent dotted
+// answer line, then converted into PDF points (1pt = 300/72 px, origin at
+// bottom-left). If the template PDF is ever redesigned, these values will
+// need to be re-measured.
+// ---------------------------------------------------------------------------
+
+const PAGE1_FIELDS = {
+  studentName: { x0: 60.0, x1: 376.8, y: 695.0, size: 10 },
+  dateOfBirth: { x0: 462.0, x1: 576.0, y: 695.0, size: 10 },
+  classApplyingFor: { x0: 90.0, x1: 196.8, y: 658.5, size: 9 },
+  previousSchool: { x0: 31.2, x1: 157.2, y: 569.7, size: 8 },
+  medicalLine1: { x0: 22.8, x1: 576.0, y: 444.0, size: 9 },
+  medicalLine2: { x0: 22.8, x1: 576.0, y: 408.9, size: 9 },
+  fatherName: { x0: 159.6, x1: 346.8, y: 334.1, size: 9 },
+  motherName: { x0: 363.6, x1: 576.0, y: 334.1, size: 9 },
+  fatherAddress: { x0: 159.6, x1: 346.8, y: 227.5, size: 8 },
+  fatherContact: { x0: 159.6, x1: 346.8, y: 191.5, size: 9 },
+  motherContact: { x0: 363.6, x1: 576.0, y: 191.5, size: 9 },
+  fatherEmail: { x0: 159.6, x1: 346.8, y: 153.6, size: 8 },
+  emergencyName: { x0: 62.4, x1: 259.2, y: 101.7, size: 9 },
+  emergencyPhone: { x0: 363.6, x1: 576.0, y: 101.7, size: 9 }
+};
+
+const PAGE2_FIELDS = {
+  guardianName: { x0: 112.8, x1: 246.0, y: 297.6, size: 9 }
+};
+
+function fitTextToWidth(font, text, maxWidth, { startSize = 10, minSize = 6 } = {}) {
+  let str = compact(text);
+  if (!str) return { text: '', size: startSize };
+  let size = startSize;
+  while (size > minSize && font.widthOfTextAtSize(str, size) > maxWidth) {
+    size -= 0.5;
+  }
+  if (font.widthOfTextAtSize(str, size) > maxWidth) {
+    while (str.length > 1 && font.widthOfTextAtSize(`${str}\u2026`, size) > maxWidth) {
+      str = str.slice(0, -1);
+    }
+    str = `${str}\u2026`;
+  }
+  return { text: str, size };
+}
+
+// Draws `value` inside the box [x0, x1] on the dotted answer line at `y`,
+// shrinking the font (and truncating with an ellipsis as a last resort) so
+// it never overflows into the next field.
+function drawValue(page, font, value, field) {
+  const text = safeText(value, '');
+  if (!text || !field) return;
+  const { x0, x1, y, size } = field;
+  const maxWidth = x1 - x0 - 4;
+  const fitted = fitTextToWidth(font, text, maxWidth, { startSize: size, minSize: Math.min(6, size) });
+  if (!fitted.text) return;
+  page.drawText(fitted.text, {
+    x: x0 + 2,
+    y,
+    size: fitted.size,
+    font,
+    color: rgb(0.05, 0.05, 0.05)
+  });
+}
+
 export async function generateAdmissionPDF(data, options = {}) {
   const projectRoot = options.projectRoot || process.cwd();
   const templatePath = options.templatePath || path.join(projectRoot, 'admission-form.pdf');
@@ -167,71 +219,91 @@ export async function generateAdmissionPDF(data, options = {}) {
 
   const templateBytes = await fs.readFile(templatePath);
   const pdf = await PDFDocument.load(templateBytes);
+
+  // The template has no real AcroForm fields (it's a scanned image), but in
+  // case a future version of the template does, try filling named fields
+  // first and only fall back to the pixel-measured overlay below.
   const form = pdf.getForm?.();
+  let usedFormFields = false;
   if (form) {
     try {
       const fields = form.getFields();
-      for (const field of fields) {
-        const name = field.getName();
-        const value = safeText(
-          {
-            studentName: data.studentName,
-            dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth).toLocaleDateString('en-GB') : '',
-            admittedIn: data.classApplyingFor || data.admittedIn,
-            admissionSource: data.admissionSource,
-            gender: data.gender,
-            fatherName: data.fatherName,
-            motherName: data.motherName,
-            address: data.address,
-            city: data.city,
-            primaryPhone: data.primaryPhone,
-            primaryEmail: data.primaryEmail,
-            guardianPhone: data.guardianPhone,
-            emergencyName: data.emergencyName,
-            emergencyPhone: data.emergencyPhone,
-            medicalInfo: data.medicalInfo,
-            previousSchool: data.previousSchool
-          }[name] || ''
-        );
-        if ('setText' in field) field.setText(value);
+      if (fields.length) {
+        for (const field of fields) {
+          const name = field.getName();
+          const value = safeText(
+            {
+              studentName: data.studentName,
+              dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth).toLocaleDateString('en-GB') : '',
+              admittedIn: data.classApplyingFor || data.admittedIn,
+              admissionSource: data.admissionSource,
+              gender: data.gender,
+              fatherName: data.fatherName,
+              motherName: data.motherName,
+              address: data.address,
+              city: data.city,
+              primaryPhone: data.primaryPhone,
+              primaryEmail: data.primaryEmail,
+              guardianPhone: data.guardianPhone,
+              emergencyName: data.emergencyName,
+              emergencyPhone: data.emergencyPhone,
+              medicalInfo: data.medicalInfo,
+              previousSchool: data.previousSchool
+            }[name] || ''
+          );
+          if ('setText' in field) field.setText(value);
+        }
+        form.flatten();
+        usedFormFields = true;
       }
-      form.flatten();
     } catch (error) {
-      // Keep the fallback overlay path working even if the template lacks usable fields.
+      // Fall back to the pixel-measured overlay below.
     }
   }
+
   const pages = pdf.getPages();
   const font = await pdf.embedFont(StandardFonts.Helvetica);
-  const bold = await pdf.embedFont(StandardFonts.HelveticaBold);
-
   const first = pages[0];
   const second = pages[1] || pages[0];
 
-  // Stamp the form with readable values while preserving the original layout.
-  drawField(first, font, 'Student Name', data.studentName, 20, 705, { labelWidth: 92, valueWidth: 300 });
-  drawField(first, font, 'Date of Birth', data.dateOfBirth ? new Date(data.dateOfBirth).toLocaleDateString('en-GB') : '', 380, 705, { labelWidth: 84, valueWidth: 120 });
-  drawField(first, font, 'Admitted In', data.classApplyingFor || data.admittedIn, 20, 660, { labelWidth: 78, valueWidth: 170 });
-  drawField(first, font, 'Gender', data.gender, 200, 660, { labelWidth: 52, valueWidth: 90 });
-  drawField(first, font, 'Father/Guardian', data.fatherName, 20, 555, { labelWidth: 110, valueWidth: 200 });
-  drawField(first, font, 'Mother/Guardian', data.motherName, 300, 555, { labelWidth: 112, valueWidth: 200 });
-  drawField(first, font, 'Postal Address', data.address, 20, 525, { labelWidth: 100, valueWidth: 465 });
-  drawField(first, font, 'City', data.city, 20, 495, { labelWidth: 40, valueWidth: 150 });
-  drawField(first, font, 'Contact Number', data.primaryPhone, 20, 465, { labelWidth: 102, valueWidth: 200 });
-  drawField(first, font, 'Email Address', data.primaryEmail, 20, 435, { labelWidth: 92, valueWidth: 240 });
-  drawField(first, font, 'Guardian Phone', data.guardianPhone, 300, 465, { labelWidth: 100, valueWidth: 170 });
-  drawField(first, font, 'Emergency Name', data.emergencyName, 20, 300, { labelWidth: 104, valueWidth: 180 });
-  drawField(first, font, 'Emergency Phone', data.emergencyPhone, 300, 300, { labelWidth: 106, valueWidth: 170 });
+  if (!usedFormFields) {
+    const dobText = data.dateOfBirth ? new Date(data.dateOfBirth).toLocaleDateString('en-GB') : '';
+    const addressText = [data.address, data.city].filter(compact).join(', ');
 
-  const medicalLines = splitLines(data.medicalInfo, 90);
-  first.drawText('Medical Information', { x: 20, y: 380, size: 10, font: bold, color: rgb(0.12, 0.12, 0.12) });
-  medicalLines.slice(0, 3).forEach((line, index) => {
-    first.drawText(line, { x: 25, y: 360 - index * 14, size: 9, font, color: rgb(0.1, 0.1, 0.1) });
-  });
-  first.drawText('Previous School: ' + safeText(data.previousSchool, '-'), { x: 20, y: 330, size: 9, font, color: rgb(0.1, 0.1, 0.1) });
+    drawValue(first, font, data.studentName, PAGE1_FIELDS.studentName);
+    drawValue(first, font, dobText, PAGE1_FIELDS.dateOfBirth);
+    drawValue(first, font, data.classApplyingFor || data.admittedIn, PAGE1_FIELDS.classApplyingFor);
+    drawValue(first, font, data.previousSchool, PAGE1_FIELDS.previousSchool);
 
-  second.drawText('Parent Signature', { x: 95, y: 160, size: 10, font: bold, color: rgb(0.12, 0.12, 0.12) });
-  second.drawText(safeText(data.fatherName || data.motherName, 'Principal copy'), { x: 100, y: 145, size: 9, font, color: rgb(0.1, 0.1, 0.1) });
-  second.drawText('Submitted by website workflow', { x: 20, y: 250, size: 8, font, color: rgb(0.35, 0.35, 0.35) });
+    const medicalLines = splitLines(data.medicalInfo, 100);
+    drawValue(first, font, medicalLines[0], PAGE1_FIELDS.medicalLine1);
+    if (medicalLines[1]) {
+      drawValue(first, font, medicalLines[1], PAGE1_FIELDS.medicalLine2);
+    }
+
+    drawValue(first, font, data.fatherName, PAGE1_FIELDS.fatherName);
+    drawValue(first, font, data.motherName, PAGE1_FIELDS.motherName);
+    drawValue(first, font, addressText, PAGE1_FIELDS.fatherAddress);
+    drawValue(first, font, data.primaryPhone, PAGE1_FIELDS.fatherContact);
+    drawValue(first, font, data.guardianPhone, PAGE1_FIELDS.motherContact);
+    drawValue(first, font, data.primaryEmail, PAGE1_FIELDS.fatherEmail);
+    drawValue(first, font, data.emergencyName, PAGE1_FIELDS.emergencyName);
+    drawValue(first, font, data.emergencyPhone, PAGE1_FIELDS.emergencyPhone);
+
+    // Printed name on the parent-signature line (page 2); the signature
+    // itself is left blank for the parent to sign by hand.
+    drawValue(second, font, data.fatherName || data.motherName, PAGE2_FIELDS.guardianName);
+
+    // Small, unobtrusive footer note in the empty margin at the very bottom
+    // of page 2, well clear of the office-use section above it.
+    second.drawText('Submitted via online admission form', {
+      x: 22.8,
+      y: 10,
+      size: 6,
+      font,
+      color: rgb(0.55, 0.55, 0.55)
+    });
+  }
 
   const timestamp = options.timestamp || Date.now();
   const fileName = `admission-${timestamp}.pdf`;
