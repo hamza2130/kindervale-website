@@ -283,7 +283,7 @@ async function createMailer() {
   throw new Error('Email service is not configured.');
 }
 
-export async function sendAdmissionEmail(data) {
+export async function sendAdmissionEmail(data, pdfData) {
   const principalEmail = process.env.PRINCIPAL_EMAIL;
   if (!principalEmail) throw new Error('PRINCIPAL_EMAIL is not configured.');
 
@@ -302,13 +302,18 @@ export async function sendAdmissionEmail(data) {
     </ul>
   `;
 
+  const attachment = pdfData?.pdfBytes
+    ? { filename: pdfData.fileName || 'admission-form.pdf', content: Buffer.from(pdfData.pdfBytes) }
+    : undefined;
+
   let lastError;
   for (let attempt = 1; attempt <= 3; attempt++) {
     try {
       await mailer.send({
         to: principalEmail,
         subject,
-        html
+        html,
+        attachment
       });
       return;
     } catch (error) {
@@ -357,22 +362,23 @@ export async function processAdmissionSubmission({ prisma, body, photo, projectR
     }
   });
 
-       // PDF generation and email are best-effort — the admission record is already saved.
-     try {
-       const generated = await generateAdmissionPDF(data, { projectRoot });
-       await prisma.admission.update({
-         where: { id: created.id },
-         data: { pdfPath: generated.filePath }
-       });
-     } catch (pdfError) {
-       console.error('[admission] PDF generation failed (non-fatal):', pdfError?.message);
-     }
+  // PDF generation and email are best-effort — the admission record is already saved.
+  let pdfData = null;
+  try {
+    pdfData = await generateAdmissionPDF(data, { projectRoot });
+    await prisma.admission.update({
+      where: { id: created.id },
+      data: { pdfPath: pdfData.filePath }
+    });
+  } catch (pdfError) {
+    console.error('[admission] PDF generation failed (non-fatal):', pdfError?.message);
+  }
 
-     try {
-       await sendAdmissionEmail(data);
-     } catch (emailError) {
-       console.error('[admission] Email delivery failed (non-fatal):', emailError?.message);
-     }
+  try {
+    await sendAdmissionEmail(data, pdfData);
+  } catch (emailError) {
+    console.error('[admission] Email delivery failed (non-fatal):', emailError?.message);
+  }
 
-     return created;
+  return created;
 }
