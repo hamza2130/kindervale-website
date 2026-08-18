@@ -531,7 +531,8 @@ app.use((error, req, res, next) => {
 });
 
 ensureAdminUser()
-  .then(() => app.listen(PORT, () => console.log(`Kindervale server running on http://localhost:${PORT}`)))
+     .catch(error => console.error('[startup] ensureAdminUser failed (non-fatal):', error?.message))
+     .then(() => app.listen(PORT, () => console.log(`Kindervale server running on http://localhost:${PORT}`)))
   .catch(error => {
     console.error(error);
     process.exit(1);
