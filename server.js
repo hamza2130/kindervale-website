@@ -50,10 +50,11 @@ app.use(helmet({
 app.use(cors({origin: true, credentials: true}));
 app.use(express.json({limit: '1mb'}));
 app.use(express.urlencoded({extended: true}));
-// The portal is live now (kindervale_portal-1, deployed on Vercel) -- send anyone who still
-// hits one of these old in-site paths straight there instead of the stale "coming soon" page.
+// The portal is live now at its own subdomain (kindervale_portal-1, deployed on Vercel) -- send
+// anyone who still hits one of these old in-site paths straight there instead of the stale
+// "coming soon" page.
 app.get(['/kindervale-portal.html', '/portal', '/portal/', '/portal/login'], (req, res) => {
-  res.redirect(302, 'https://kindervaleportal.vercel.app/login');
+  res.redirect(302, 'https://portal.kindervale.com/login');
 });
 app.use(express.static(__dirname));
 
